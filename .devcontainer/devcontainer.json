@@ -1,0 +1,31 @@
+{
+    "name": "Weather CLI Dev",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.pythonPath": "/usr/local/bin/python",
+                "python.formatting.provider": "autopep8",
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash"
+                    }
+                },
+                "chat.promptFiles": true
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-azuretools.vscode-docker",
+                "GitHub.copilot",
+                "GitHub.copilot-chat"
+            ]
+        }
+    },
+    "postCreateCommand": "if [ -f requirements.txt ]; then pip install -r requirements.txt; fi && if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; fi",
+    "features": {},
+    "remoteUser": "vscode"
+}
