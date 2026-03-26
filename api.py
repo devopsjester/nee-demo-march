@@ -99,3 +99,47 @@ def get_weather(lat, lon):
         "temperature_f": temp,
         "condition": condition,
     }
+
+
+# US AQI category thresholds
+AQI_CATEGORIES = [
+    (50, "Good"),
+    (100, "Moderate"),
+    (150, "Unhealthy for Sensitive Groups"),
+    (200, "Unhealthy"),
+    (300, "Very Unhealthy"),
+    (500, "Hazardous"),
+]
+
+
+def get_aqi_category(aqi_value):
+    """Return the AQI category label for a given US AQI value."""
+    for threshold, category in AQI_CATEGORIES:
+        if aqi_value <= threshold:
+            return category
+    return "Hazardous"
+
+
+def get_air_quality(lat, lon):
+    """Return current US AQI and category via open-meteo.com air quality API."""
+    url = "https://air-quality-api.open-meteo.com/v1/air-quality"
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "current": "us_aqi",
+    }
+    try:
+        response = requests.get(url, params=params, timeout=10)
+    except requests.exceptions.ConnectionError:
+        raise RuntimeError(
+            "Unable to connect to the air quality service. Check your internet connection."
+        )
+    response.raise_for_status()
+    data = response.json()
+    aqi_value = data["current"]["us_aqi"]
+    if aqi_value is None:
+        raise RuntimeError("Air quality data is not available for this location.")
+    return {
+        "aqi": aqi_value,
+        "category": get_aqi_category(aqi_value),
+    }
