@@ -11,6 +11,7 @@ All APIs are free and require no registration or API keys:
 | Location from IP address | [ip-api.com](http://ip-api.com)            |
 | City/state from zip code | [zippopotam.us](https://api.zippopotam.us) |
 | Weather data             | [open-meteo.com](https://open-meteo.com)   |
+| Air quality data         | [open-meteo.com](https://open-meteo.com)   |
 
 ## Installation
 
@@ -65,6 +66,24 @@ python3 weather.py current --zipcode 10001
 
 ```
 It is currently 72.5ºF, and partly cloudy in New York, New York.
+```
+
+### `aqi`
+
+Displays the current air quality index (US AQI) and category.
+
+```bash
+# Use current location
+python3 weather.py aqi
+
+# Look up a specific US zip code
+python3 weather.py aqi --zipcode 90210
+```
+
+**Example output:**
+
+```
+The air quality in Beverly Hills, California is 42 (Good).
 ```
 
 ## Project Structure

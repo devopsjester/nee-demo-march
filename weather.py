@@ -1,6 +1,6 @@
 import sys
 import click
-from api import get_location_by_zipcode, get_current_location, get_weather
+from api import get_location_by_zipcode, get_current_location, get_weather, get_air_quality
 
 
 @click.group()
@@ -45,6 +45,30 @@ def current(zipcode):
         condition = weather["condition"]
         click.echo(
             f"It is currently {temp}ºF, and {condition} in {loc['city']}, {loc['state']}."
+        )
+    except ValueError as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+    except RuntimeError as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"Unexpected error: {e}", err=True)
+        sys.exit(1)
+
+
+@cli.command("aqi")
+@click.option("--zipcode", default=None, help="US zip code to get air quality for.")
+def aqi(zipcode):
+    """Display the current air quality index (US AQI)."""
+    try:
+        if zipcode:
+            loc = get_location_by_zipcode(zipcode)
+        else:
+            loc = get_current_location()
+        air = get_air_quality(loc["lat"], loc["lon"])
+        click.echo(
+            f"The air quality in {loc['city']}, {loc['state']} is {air['aqi']} ({air['category']})."
         )
     except ValueError as e:
         click.echo(f"Error: {e}", err=True)
